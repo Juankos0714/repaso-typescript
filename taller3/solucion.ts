@@ -46,7 +46,6 @@ resuelva inicialmente con el valor 2 <resolve(2)> y los siguientes métodos .the
 cuadrado el valor pasado, imprimiendo al final el mensaje “el valor final es: X” donde x es el
 resultado final del encadenamiento
  */
-
 let promesa12 = new Promise((resolve, reject) => {
     resolve(2);
 })
@@ -83,16 +82,20 @@ retorne la promesa3, y cuando la promesa 3 se cumpla imprima desde su .then el m
 el que se resolvió. Implemente .catch para manejar el error que puede ocurrir en la promesa2, en
 caso de que ocurra el rechazo, imprima el mensaje del error mediante err.message.
  */
+
+let opcion:boolean = false;
 let laPromesa1 = new Promise((resolve, reject) => {
-    resolve("Soy la promesa 20");
+    resolve("Somos ADSO");
 })
 
 let laPromesa2 = new Promise((resolve, reject) => {
-    resolve("Soy la promesa 21")
+    if (opcion){
+        resolve("Somos programadores")
+}reject("“Promesa 2 no cumplida")
 })
 
 let laPromesa3 = new Promise((resolve, reject) => {
-    resolve("Soy la promesa 22")
+    resolve("Hacemos mover el mundo")
 })
 
 laPromesa1.then((res) => {
@@ -105,4 +108,87 @@ laPromesa1.then((res) => {
     console.log(res);
 }).catch((err) => {
     console.log(err);
+})
+/** Cree una promesa cuyo resolve y reject dependan cada uno de una llamada asíncrona usando
+setTimeout y así, su rechazo o resolución dependerá del proceso asíncrono que termine
+primero. Implemente métodos .then y .catch. Si la promesa se rechaza, lance el error con new
+Error(‘info error’) en el reject e imprima el stack del error en .catch, si se cumple, resuelva la
+promesa con la cadena “promesa resuelta” e imprímalo en el .then
+ * 
+*/
+let promesa6 = new Promise((resolve, reject) =>{
+    function habilitado() {
+        resolve("info successful");
+    }
+    setTimeout(habilitado, 2000);
+
+    function inhabilitado(){
+        reject(new Error('info error'));
+    }
+    setTimeout(inhabilitado, 3000)
+})
+
+promesa6.then((res) => {
+    console.log(res);
+}).catch((err) => {
+    console.log(err.message);
+})
+
+/* Cree cuatro promesas donde cada una para resolverse dependa de un setTimeout, de tal
+manera que cada promesa se resuelva en tiempos diferentes. Ejecute las cuatro promesas de
+forma paralela, e imprima los cuatro resultados de resolución(recuerde que estos resultados van
+en un arreglo, se sugiere use .foreach). No olvide .catch, qué pasa si una de las promesas falla al
+estar las cuatro en paralelo ?. Haga una implementación de Promise.race con dos de las
+promesas anteriores.
+**/
+
+let promesa7_1 = new Promise((resolve, reject)=>{
+    function Well1(){
+        resolve('Promesa 1 cumplida');
+    }
+    setTimeout(Well1, 4000);
+
+})
+
+let promesa7_2 = new Promise((resolve, reject)=>{
+    function Well2(){
+        resolve('Promesa 2 cumplida');
+    }
+    setTimeout(Well2, 5000);
+
+})
+
+let promesa7_3 = new Promise((resolve, reject)=>{
+    function Well3(){
+        resolve('Promesa 3 cumplida');
+    }
+    setTimeout(Well3, 3000);
+
+})
+
+
+let promesa7_4 = new Promise((resolve, reject)=>{
+    function Well4(){
+        resolve('Promesa 4 cumplida');
+    }
+    function err4(){
+        reject('falla')
+    }
+    setTimeout(err4)
+
+})
+Promise.all([promesa7_1,promesa7_2,promesa7_3,promesa7_4])
+
+.then((array)=>{
+    array.forEach((elemento)=>{
+        console.log(`Promesa cumplida: `,elemento);       
+    })
+
+}).catch((err)=>{
+    Promise.race([promesa7_1,promesa7_2]).then((resultado:any)=>{
+        console.log(`La ganadora es: `,resultado);
+        
+    })
+    
+    
 })
